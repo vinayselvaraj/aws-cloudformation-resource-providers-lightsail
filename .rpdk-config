@@ -1,0 +1,18 @@
+{
+    "typeName": "AWS::LightSail::Instance",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "software.amazon.lightsail.cfn.instance.HandlerWrapper::handleRequest",
+    "testEntrypoint": "software.amazon.lightsail.cfn.instance.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "software",
+            "amazon",
+            "lightsail",
+            "cfn",
+            "instance"
+        ],
+        "codegen_template_path": "default",
+        "protocolVersion": "2.0.0"
+    }
+}
