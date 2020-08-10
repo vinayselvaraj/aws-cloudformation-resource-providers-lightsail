@@ -1,105 +1,62 @@
 {
     "typeName": "AWS::LightSail::Instance",
-    "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+    "description": "LightSail Instance Resource Provider",
     "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-    "definitions": {
-        "InitechDateFormat": {
-            "$comment": "Use the `definitions` block to provide shared resource property schemas",
-            "type": "string",
-            "format": "date-time"
-        },
-        "Memo": {
-            "type": "object",
-            "properties": {
-                "Heading": {
-                    "type": "string"
-                },
-                "Body": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false
-        }
-    },
     "properties": {
-        "TPSCode": {
-            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
+        "AvailabilityZone": {
+            "description": "The Availability Zone in which to create your instance. Use the following format: us-east-2a (case sensitive). You can get a list of Availability Zones by using the get regions operation. Be sure to add the include Availability Zones parameter to your request.",
             "type": "string",
-            "pattern": "^[A-Z]{3,5}[0-9]{8}-[0-9]{4}$"
+            "pattern":  ".*\\S.*"
         },
-        "Title": {
-            "description": "The title of the TPS report is a mandatory element.",
+        "InstanceName": {
+            "description": "The names to use for your new Lightsail instances.",
             "type": "string",
-            "minLength": 20,
-            "maxLength": 250
+            "pattern": ".*\\S.*"
         },
-        "CoverSheetIncluded": {
-            "description": "Required for all TPS Reports submitted after 2/19/1999",
-            "type": "boolean"
-        },
-        "DueDate": {
-            "$ref": "#/definitions/InitechDateFormat"
-        },
-        "ApprovalDate": {
-            "$ref": "#/definitions/InitechDateFormat"
-        },
-        "Memo": {
-            "$ref": "#/definitions/Memo"
-        },
-        "SecondCopyOfMemo": {
-            "description": "In case you didn't get the first one.",
-            "$ref": "#/definitions/Memo"
-        },
-        "TestCode": {
+        "BlueprintId": {
+            "description": "The ID for a virtual private server image (e.g., app_wordpress_4_4 or app_lamp_7_0). Use the get blueprints operation to return a list of available images (or blueprints).",
             "type": "string",
-            "enum": [
-                "NOT_STARTED",
-                "CANCELLED"
-            ]
+            "pattern": ".*\\S.*"
         },
-        "Authors": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
+        "BundleId": {
+            "description": "The bundle of specification information for your virtual private server (or instance), including the pricing plan (e.g., micro_1_0).",
+            "type": "string",
+            "pattern": ".*\\S.*"
         }
     },
     "additionalProperties": false,
     "required": [
-        "TestCode",
-        "Title"
+        "AvailabilityZone",
+        "BlueprintId",
+        "BundleId"
     ],
     "readOnlyProperties": [
-        "/properties/TPSCode"
+        "/properties/InstanceName"
     ],
     "primaryIdentifier": [
-        "/properties/TPSCode"
+        "/properties/InstanceName"
     ],
     "handlers": {
         "create": {
             "permissions": [
-                "initech:CreateReport"
+                "lightsail:CreateInstances"
             ]
         },
         "read": {
             "permissions": [
-                "initech:DescribeReport"
+                "lightsail:GetInstance"
             ]
         },
         "update": {
-            "permissions": [
-                "initech:UpdateReport"
-            ]
+          "permissions": []
         },
         "delete": {
             "permissions": [
-                "initech:DeleteReport"
+                "lightsail:DeleteInstance"
             ]
         },
         "list": {
-            "permissions": [
-                "initech:ListReports"
-            ]
+          "permissions": []
         }
     }
 }

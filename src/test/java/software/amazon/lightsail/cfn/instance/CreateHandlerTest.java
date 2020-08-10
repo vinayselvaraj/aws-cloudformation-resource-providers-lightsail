@@ -34,6 +34,9 @@ public class CreateHandlerTest {
         final CreateHandler handler = new CreateHandler();
 
         final ResourceModel model = ResourceModel.builder().build();
+        model.setBundleId("nano_2_0");
+        model.setBlueprintId("amazon_linux");
+        model.setAvailabilityZone("us-east-1a");
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)
