@@ -83,3 +83,7 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 
 The names to use for your new Lightsail instances.
 
+#### Arn
+
+Returns the <code>Arn</code> value.
+

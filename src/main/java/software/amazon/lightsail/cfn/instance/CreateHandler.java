@@ -4,18 +4,16 @@ import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.AmazonLightsailClientBuilder;
 import com.amazonaws.services.lightsail.model.CreateInstancesRequest;
 import com.amazonaws.services.lightsail.model.CreateInstancesResult;
-import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
-import software.amazon.cloudformation.proxy.Logger;
-import software.amazon.cloudformation.proxy.ProgressEvent;
-import software.amazon.cloudformation.proxy.OperationStatus;
-import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import com.amazonaws.services.lightsail.model.Operation;
+import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
+import software.amazon.cloudformation.proxy.*;
+import software.amazon.cloudformation.resource.IdentifierUtils;
 
-import java.util.Collections;
-import java.util.UUID;
 
 public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private Logger logger;
+    private final AmazonLightsail lightsailClient = AmazonLightsailClientBuilder.defaultClient();
 
     @Override
     public ProgressEvent<ResourceModel, CallbackContext> handleRequest(
@@ -27,27 +25,50 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         this.logger = logger;
         final ResourceModel model = request.getDesiredResourceState();
 
-        logger.log(String.format("Invoked CreateHandler.handleRequest request=%s", request));
-
-        String instanceName = model.getInstanceName();
-
-        if(instanceName == null) {
-            instanceName = UUID.randomUUID().toString();
+        if(model.getArn() != null) {
+            // Check the status of the instance creation
         }
 
-        AmazonLightsail lightsail = AmazonLightsailClientBuilder.defaultClient();
-        CreateInstancesRequest createInstancesRequest = new CreateInstancesRequest()
-                .withAvailabilityZone(model.getAvailabilityZone())
-                .withBlueprintId(model.getBlueprintId())
-                .withInstanceNames(Collections.singletonList(instanceName))
-                .withAvailabilityZone(model.getAvailabilityZone())
-                .withBundleId(model.getBundleId());
-        CreateInstancesResult result = proxy.injectCredentialsAndInvoke(createInstancesRequest, lightsail::createInstances);
+        if (model.getInstanceName() == null || model.getInstanceName().isEmpty()) {
+            model.setInstanceName(
+                    IdentifierUtils.generateResourceIdentifier(
+                            "inst-", request.getClientRequestToken(), 128));
+        }
 
-        return ProgressEvent.<ResourceModel, CallbackContext>builder()
-            .resourceModel(model)
-            .status(OperationStatus.SUCCESS)
-            .build();
+        CreateInstancesResult result = createResource(Translator.translateToCreateRequest(model), proxy);
+        for(Operation op : result.getOperations()) {
+            if(op != null) {
+                logger.log(op.toString());
+            }
+        }
+
+        return ProgressEvent.defaultSuccessHandler(model);
+
+
+//        return proxy.initiate("lightsail::CreateInstances", proxyClient, model, callbackContext)
+//                .translateToServiceRequest((resourceModel) -> Translator.translateToCreateRequest(resourceModel))
+//                .makeServiceCall(this::createResource)
+//                .stabilize(CreateHandler::stabilize)
+//                .progress();
+    }
+
+    private CreateInstancesResult createResource(final CreateInstancesRequest createInstancesRequest,
+                                                final AmazonWebServicesClientProxy proxy) {
+        try {
+            return proxy.injectCredentialsAndInvoke(createInstancesRequest, lightsailClient::createInstances);
+        } catch (final Exception e) {
+            throw new CfnServiceInternalErrorException("CreateInstance", e);
+        }
+    }
+
+    protected static boolean stabilize(
+            final CreateInstancesRequest createInstancesRequest,
+            final CreateInstancesResult createInstancesResult,
+            final AmazonWebServicesClientProxy proxy,
+            final ResourceModel resourceModel,
+            final CallbackContext callbackContext
+    ) {
+        return true;
     }
 
 }

@@ -2,7 +2,16 @@
     "typeName": "AWS::LightSail::Instance",
     "description": "LightSail Instance Resource Provider",
     "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+    "definitions": {
+        "Arn": {
+            "type": "string"
+        }
+    },
     "properties": {
+        "Arn": {
+            "description": "The Amazon Resource Name (ARN) of the Lightsail instance.",
+            "$ref": "#/definitions/Arn"
+        },
         "AvailabilityZone": {
             "description": "The Availability Zone in which to create your instance. Use the following format: us-east-2a (case sensitive). You can get a list of Availability Zones by using the get regions operation. Be sure to add the include Availability Zones parameter to your request.",
             "type": "string",
@@ -31,7 +40,8 @@
         "BundleId"
     ],
     "readOnlyProperties": [
-        "/properties/InstanceName"
+        "/properties/InstanceName",
+        "/properties/Arn"
     ],
     "primaryIdentifier": [
         "/properties/InstanceName"
