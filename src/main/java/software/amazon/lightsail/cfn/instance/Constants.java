@@ -1,8 +1,13 @@
 package software.amazon.lightsail.cfn.instance;
 
 public class Constants {
-    public static final int ALLOWED_LOGICAL_RESOURCE_ID_LENGTH = 500;
-    public static final int GUID_LENGTH = 12;
-    public static final String CF_INSTANCE_NAME_PREFIX = "CFN";
     public final static String CREATE_INSTANCE = "lightsail::CreateInstance";
+    public static final String CREATE_OPERATION = "CreateInstance";
+    public static final String STATUS_CREATION_PENDING = "CreationPending";
+    public static final String STATUS_DELETE_PENDING = "DeletePending";
+    public static final int NUMBER_OF_STATUS_POLL_RETRIES = 120;
+    public static final String INSTANCE_STATE_RUNNING = "running";
+    public static final String CREATE_TIMED_OUT_MESSAGE = "Timed out waiting for Lightsail instance to create.";
+    public static final String DELETE_TIMED_OUT_MESSAGE = "Timed out waiting for Lightsail instance to delete.";
+    public static final int CALLBACK_DELAY_SECONDS = 5;
 }
