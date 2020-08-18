@@ -2,10 +2,7 @@ package software.amazon.lightsail.cfn.instance;
 
 import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.AmazonLightsailClientBuilder;
-import com.amazonaws.services.lightsail.model.DeleteInstanceRequest;
-import com.amazonaws.services.lightsail.model.GetInstanceRequest;
-import com.amazonaws.services.lightsail.model.GetInstanceResult;
-import com.amazonaws.services.lightsail.model.Instance;
+import com.amazonaws.services.lightsail.model.*;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -42,7 +39,13 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
         DeleteInstanceRequest deleteInstanceRequest = new DeleteInstanceRequest();
         deleteInstanceRequest.setInstanceName(model.getInstanceName());
-        proxy.injectCredentialsAndInvoke(deleteInstanceRequest, lightsailClient::deleteInstance);
+
+        try {
+            proxy.injectCredentialsAndInvoke(deleteInstanceRequest, lightsailClient::deleteInstance);
+        } catch(NotFoundException e) {
+            logger.log(String.format("Instance %s may already been deleted", model.getInstanceName()));
+            return ProgressEvent.defaultSuccessHandler(model);
+        }
 
         CallbackContext newCallbackContext = CallbackContext.builder()
                 .stabilizationRetriesRemaining(currentContext.getStabilizationRetriesRemaining() - 1)
@@ -67,9 +70,16 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         GetInstanceRequest getInstanceRequest = new GetInstanceRequest();
         getInstanceRequest.setInstanceName(model.getInstanceName());
 
-        GetInstanceResult getInstanceResult =
-                proxy.injectCredentialsAndInvoke(getInstanceRequest, lightsailClient::getInstance);
-        Instance instance = getInstanceResult.getInstance();
+        Instance instance = null;
+
+        try {
+            GetInstanceResult getInstanceResult =
+                    proxy.injectCredentialsAndInvoke(getInstanceRequest, lightsailClient::getInstance);
+            instance = getInstanceResult.getInstance();
+        } catch(NotFoundException e) {
+            logger.log(String.format("Instance %s may already been deleted", model.getInstanceName()));
+        }
+
         if(instance == null) {
             logger.log(String.format("Instance %s has been deleted", model.getInstanceName()));
             return ProgressEvent.defaultSuccessHandler(model);

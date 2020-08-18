@@ -6,7 +6,8 @@ import software.amazon.cloudformation.proxy.StdCallbackContext;
 @lombok.Setter
 @lombok.ToString
 @lombok.Builder
-@lombok.EqualsAndHashCode(callSuper = true)
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor@lombok.EqualsAndHashCode(callSuper = true)
 public class CallbackContext extends StdCallbackContext {
     private Integer stabilizationRetriesRemaining;
     private String status;
