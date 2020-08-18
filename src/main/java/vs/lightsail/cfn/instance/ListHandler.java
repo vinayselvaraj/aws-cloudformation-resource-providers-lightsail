@@ -1,10 +1,11 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+import vs.lightsail.cfn.instance.BaseHandler;
 
 import java.util.ArrayList;
 import java.util.List;

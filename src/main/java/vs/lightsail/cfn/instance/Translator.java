@@ -1,9 +1,8 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 import com.amazonaws.services.lightsail.model.CreateInstancesRequest;
 
 import java.util.Collections;
-import java.util.UUID;
 
 public class Translator {
 

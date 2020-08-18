@@ -1,4 +1,4 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;

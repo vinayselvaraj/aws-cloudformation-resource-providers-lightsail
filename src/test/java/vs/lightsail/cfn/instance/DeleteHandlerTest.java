@@ -1,4 +1,4 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateHandlerTest {
+public class DeleteHandlerTest {
 
     @Mock
     private AmazonWebServicesClientProxy proxy;
@@ -31,7 +31,7 @@ public class UpdateHandlerTest {
 
     @Test
     public void handleRequest_SimpleSuccess() {
-        final UpdateHandler handler = new UpdateHandler();
+        final DeleteHandler handler = new DeleteHandler();
 
         final ResourceModel model = ResourceModel.builder().build();
 
@@ -43,9 +43,9 @@ public class UpdateHandlerTest {
             = handler.handleRequest(proxy, request, null, logger);
 
         assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
-        assertThat(response.getCallbackContext()).isNull();
-        assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.IN_PROGRESS);
+        assertThat(response.getCallbackContext()).isNotNull();
+        assertThat(response.getCallbackDelaySeconds()).isEqualTo(Constants.CALLBACK_DELAY_SECONDS);
         assertThat(response.getResourceModel()).isEqualTo(request.getDesiredResourceState());
         assertThat(response.getResourceModels()).isNull();
         assertThat(response.getMessage()).isNull();

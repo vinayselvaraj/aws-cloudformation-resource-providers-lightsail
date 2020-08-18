@@ -1,4 +1,4 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 import com.amazonaws.services.lightsail.model.CreateInstancesRequest;
 import com.amazonaws.services.lightsail.model.CreateInstancesResult;

@@ -1,4 +1,4 @@
-package software.amazon.lightsail.cfn.instance;
+package vs.lightsail.cfn.instance;
 
 public class Constants {
     public final static String CREATE_INSTANCE = "lightsail::CreateInstance";

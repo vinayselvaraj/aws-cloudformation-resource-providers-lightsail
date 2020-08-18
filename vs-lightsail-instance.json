@@ -1,5 +1,5 @@
 {
-    "typeName": "AWS::LightSail::Instance",
+    "typeName": "VS::LightSail::Instance",
     "description": "LightSail Instance Resource Provider",
     "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
     "definitions": {

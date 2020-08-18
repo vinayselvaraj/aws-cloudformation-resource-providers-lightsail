@@ -5,9 +5,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>software.amazon.lightsail.cfn.instance</groupId>
-    <artifactId>aws-lightsail-instance-handler</artifactId>
-    <name>aws-lightsail-instance-handler</name>
+    <groupId>vs.lightsail.cfn.instance</groupId>
+    <artifactId>vs-lightsail-instance-handler</artifactId>
+    <name>vs-lightsail-instance-handler</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -201,7 +201,7 @@
             <resource>
                 <directory>${project.basedir}</directory>
                 <includes>
-                    <include>aws-lightsail-instance.json</include>
+                    <include>vs-lightsail-instance.json</include>
                 </includes>
             </resource>
         </resources>
