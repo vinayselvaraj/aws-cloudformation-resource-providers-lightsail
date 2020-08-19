@@ -112,14 +112,5 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                 model);
     }
 
-    protected static boolean stabilize(
-            final CreateInstancesRequest createInstancesRequest,
-            final CreateInstancesResult createInstancesResult,
-            final AmazonWebServicesClientProxy proxy,
-            final ResourceModel resourceModel,
-            final CallbackContext callbackContext
-    ) {
-        return true;
-    }
 
 }

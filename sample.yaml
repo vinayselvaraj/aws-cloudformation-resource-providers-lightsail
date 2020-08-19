@@ -5,6 +5,6 @@ Resources:
   LightSailInstance:
     Type: VS::LightSail::Instance
     Properties:
-        AvailabilityZone: us-east-1a
+        AvailabilityZone: us-east-1b
         BundleId: nano_2_0
         BlueprintId: amazon_linux

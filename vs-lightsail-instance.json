@@ -48,6 +48,9 @@
         "/properties/InstanceName",
         "/properties/Arn"
     ],
+    "writeOnlyProperties": [
+        "/properties/UserData"
+    ],
     "primaryIdentifier": [
         "/properties/InstanceName"
     ],

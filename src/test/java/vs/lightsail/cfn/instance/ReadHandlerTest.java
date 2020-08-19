@@ -1,5 +1,7 @@
 package vs.lightsail.cfn.instance;
 
+import com.amazonaws.services.lightsail.model.*;
+import org.mockito.Mockito;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.OperationStatus;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -34,6 +38,17 @@ public class ReadHandlerTest {
         final ReadHandler handler = new ReadHandler();
 
         final ResourceModel model = ResourceModel.builder().build();
+
+        GetInstanceResult mockResult = new GetInstanceResult();
+        Instance mockInstance = new Instance();
+        mockInstance.setArn(model.getArn());
+        mockInstance.setBlueprintId(model.getBlueprintId());
+        mockInstance.setBundleId(model.getBundleId());
+        mockInstance.setLocation(new ResourceLocation().withAvailabilityZone(model.getAvailabilityZone()));
+        mockInstance.setName(model.getInstanceName());
+        mockResult.setInstance(mockInstance);
+
+        Mockito.doReturn(mockResult).when(proxy).injectCredentialsAndInvoke(Mockito.any(GetInstanceRequest.class), Mockito.any());
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)
