@@ -15,6 +15,8 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final Logger logger) {
 
+        logger.log("Invoked ReadHandler.handleRequest");
+
         final ResourceModel model = request.getDesiredResourceState();
 
         // TODO : put your code here

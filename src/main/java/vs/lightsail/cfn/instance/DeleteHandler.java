@@ -21,6 +21,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final Logger logger) {
 
+        logger.log("Invoked DeleteHandler.handleRequest");
+
         final ResourceModel model = request.getDesiredResourceState();
 
         final CallbackContext currentContext = callbackContext == null

@@ -15,6 +15,8 @@ public class UpdateHandler extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final Logger logger) {
 
+        logger.log("Invoked UpdateHandler.handleRequest");
+
         final ResourceModel model = request.getDesiredResourceState();
 
         // TODO : put your code here

@@ -19,6 +19,8 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final Logger logger) {
 
+        logger.log("Invoked ListHandler.handleRequest");
+
         final List<ResourceModel> models = new ArrayList<>();
 
         // TODO : put your code here
