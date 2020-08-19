@@ -14,7 +14,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Properties" : {
         "<a href="#availabilityzone" title="AvailabilityZone">AvailabilityZone</a>" : <i>String</i>,
         "<a href="#blueprintid" title="BlueprintId">BlueprintId</a>" : <i>String</i>,
-        "<a href="#bundleid" title="BundleId">BundleId</a>" : <i>String</i>
+        "<a href="#bundleid" title="BundleId">BundleId</a>" : <i>String</i>,
+        "<a href="#userdata" title="UserData">UserData</a>" : <i>String</i>
     }
 }
 </pre>
@@ -27,6 +28,7 @@ Properties:
     <a href="#availabilityzone" title="AvailabilityZone">AvailabilityZone</a>: <i>String</i>
     <a href="#blueprintid" title="BlueprintId">BlueprintId</a>: <i>String</i>
     <a href="#bundleid" title="BundleId">BundleId</a>: <i>String</i>
+    <a href="#userdata" title="UserData">UserData</a>: <i>String</i>
 </pre>
 
 ## Properties
@@ -60,6 +62,18 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 The bundle of specification information for your virtual private server (or instance), including the pricing plan (e.g., micro_1_0).
 
 _Required_: Yes
+
+_Type_: String
+
+_Pattern_: <code>.*\S.*</code>
+
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+
+#### UserData
+
+User data script to use when the instance starts up
+
+_Required_: No
 
 _Type_: String
 

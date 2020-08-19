@@ -13,6 +13,7 @@ public class Translator {
                 .withBlueprintId(model.getBlueprintId())
                 .withInstanceNames(Collections.singletonList(model.getInstanceName()))
                 .withAvailabilityZone(model.getAvailabilityZone())
+                .withUserData(model.getUserData())
                 .withBundleId(model.getBundleId());
     }
 }
