@@ -12,6 +12,7 @@ Resources:
     Properties:
       Handler: vs.lightsail.cfn.instance.HandlerWrapper::handleRequest
       Runtime: java8
+      MemorySize: 512
       CodeUri: ./target/vs-lightsail-instance-handler-1.0-SNAPSHOT.jar
 
   TestEntrypoint:
@@ -19,5 +20,6 @@ Resources:
     Properties:
       Handler: vs.lightsail.cfn.instance.HandlerWrapper::testEntrypoint
       Runtime: java8
+      MemorySize: 512
       CodeUri: ./target/vs-lightsail-instance-handler-1.0-SNAPSHOT.jar
 
