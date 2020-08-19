@@ -1,4 +1,4 @@
-# AWS::LightSail::Instance
+# VS::LightSail::Instance
 
 Congratulations on starting development! Next steps:
 
