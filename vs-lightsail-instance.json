@@ -51,6 +51,14 @@
     "primaryIdentifier": [
         "/properties/InstanceName"
     ],
+    "createOnlyProperties": [
+        "/properties/InstanceName",
+        "/properties/AvailabilityZone",
+        "/properties/BlueprintId",
+        "/properties/BundleId",
+        "/properties/UserData"
+
+    ],
     "handlers": {
         "create": {
             "permissions": [
@@ -61,9 +69,6 @@
             "permissions": [
                 "lightsail:GetInstance"
             ]
-        },
-        "update": {
-          "permissions": []
         },
         "delete": {
             "permissions": [
