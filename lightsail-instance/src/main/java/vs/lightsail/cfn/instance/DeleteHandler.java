@@ -3,6 +3,8 @@ package vs.lightsail.cfn.instance;
 import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.AmazonLightsailClientBuilder;
 import com.amazonaws.services.lightsail.model.*;
+import software.amazon.cloudformation.exceptions.CfnNotFoundException;
+import software.amazon.cloudformation.exceptions.CfnNotStabilizedException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.ProgressEvent;
@@ -22,6 +24,8 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         final Logger logger) {
 
         logger.log("Invoked DeleteHandler.handleRequest");
+        logger.log("callbackContext=" + callbackContext);
+        logger.log("request=" + request);
 
         final ResourceModel model = request.getDesiredResourceState();
 
@@ -32,7 +36,7 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                 : callbackContext;
 
         if (currentContext.getStabilizationRetriesRemaining() == 0) {
-            throw new RuntimeException(Constants.DELETE_TIMED_OUT_MESSAGE);
+            throw new CfnNotStabilizedException(ResourceModel.TYPE_NAME, model.getInstanceName());
         }
 
         if(currentContext.getStatus() != null && currentContext.getStatus().equals(Constants.STATUS_DELETE_PENDING)) {
@@ -42,12 +46,11 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
         DeleteInstanceRequest deleteInstanceRequest = new DeleteInstanceRequest();
         deleteInstanceRequest.setInstanceName(model.getInstanceName());
 
-        try {
-            proxy.injectCredentialsAndInvoke(deleteInstanceRequest, lightsailClient::deleteInstance);
-        } catch(NotFoundException e) {
-            logger.log(String.format("Instance %s may already been deleted", model.getInstanceName()));
-            return ProgressEvent.defaultSuccessHandler(model);
+        if(!SharedHelper.doesInstanceExist(model, proxy, logger, lightsailClient)) {
+            throw new CfnNotFoundException(ResourceModel.TYPE_NAME, model.getInstanceName());
         }
+
+        proxy.injectCredentialsAndInvoke(deleteInstanceRequest, lightsailClient::deleteInstance);
 
         CallbackContext newCallbackContext = CallbackContext.builder()
                 .stabilizationRetriesRemaining(currentContext.getStabilizationRetriesRemaining() - 1)
@@ -69,33 +72,17 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
         final ResourceModel model = request.getDesiredResourceState();
 
-        GetInstanceRequest getInstanceRequest = new GetInstanceRequest();
-        getInstanceRequest.setInstanceName(model.getInstanceName());
-
-        Instance instance = null;
-
-        try {
-            GetInstanceResult getInstanceResult =
-                    proxy.injectCredentialsAndInvoke(getInstanceRequest, lightsailClient::getInstance);
-            instance = getInstanceResult.getInstance();
-        } catch(NotFoundException e) {
-            logger.log(String.format("Instance %s may already been deleted", model.getInstanceName()));
+        if(SharedHelper.doesInstanceExist(model, proxy, logger, lightsailClient)) {
+            CallbackContext newCallbackContext = CallbackContext.builder()
+                    .stabilizationRetriesRemaining(callbackContext.getStabilizationRetriesRemaining() - 1)
+                    .status(Constants.STATUS_DELETE_PENDING)
+                    .build();
+            return ProgressEvent.defaultInProgressHandler(
+                    newCallbackContext,
+                    (int) Duration.ofSeconds(Constants.CALLBACK_DELAY_SECONDS).getSeconds(),
+                    model);
         }
 
-        if(instance == null) {
-            logger.log(String.format("Instance %s has been deleted", model.getInstanceName()));
-            return ProgressEvent.defaultSuccessHandler(model);
-        }
-
-        logger.log(String.format("Still deleting instance %s", model.getInstanceName()));
-        logger.log(instance.toString());
-        CallbackContext newCallbackContext = CallbackContext.builder()
-                .stabilizationRetriesRemaining(callbackContext.getStabilizationRetriesRemaining() - 1)
-                .status(Constants.STATUS_DELETE_PENDING)
-                .build();
-        return ProgressEvent.defaultInProgressHandler(
-                newCallbackContext,
-                (int) Duration.ofSeconds(Constants.CALLBACK_DELAY_SECONDS).getSeconds(),
-                model);
+        return ProgressEvent.defaultSuccessHandler(model);
     }
 }

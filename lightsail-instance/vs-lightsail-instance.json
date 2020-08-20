@@ -2,40 +2,26 @@
     "typeName": "VS::LightSail::Instance",
     "description": "LightSail Instance Resource Provider",
     "sourceUrl": "https://github.com/vinayselvaraj/aws-cloudformation-resource-providers-lightsail.git",
-    "definitions": {
-        "Arn": {
-            "type": "string"
-        }
-    },
     "properties": {
-        "Arn": {
-            "description": "The Amazon Resource Name (ARN) of the Lightsail instance.",
-            "$ref": "#/definitions/Arn"
-        },
         "AvailabilityZone": {
             "description": "The Availability Zone in which to create your instance. Use the following format: us-east-2a (case sensitive). You can get a list of Availability Zones by using the get regions operation. Be sure to add the include Availability Zones parameter to your request.",
-            "type": "string",
-            "pattern":  ".*\\S.*"
+            "type": "string"
         },
         "InstanceName": {
             "description": "The names to use for your new Lightsail instances.",
-            "type": "string",
-            "pattern": ".*\\S.*"
+            "type": "string"
         },
         "BlueprintId": {
             "description": "The ID for a virtual private server image (e.g., app_wordpress_4_4 or app_lamp_7_0). Use the get blueprints operation to return a list of available images (or blueprints).",
-            "type": "string",
-            "pattern": ".*\\S.*"
+            "type": "string"
         },
         "BundleId": {
             "description": "The bundle of specification information for your virtual private server (or instance), including the pricing plan (e.g., micro_1_0).",
-            "type": "string",
-            "pattern": ".*\\S.*"
+            "type": "string"
         },
         "UserData": {
             "description": "User data script to use when the instance starts up",
-            "type": "string",
-            "pattern": ".*\\S.*"
+            "type": "string"
         }
     },
     "additionalProperties": false,
@@ -44,10 +30,6 @@
         "BlueprintId",
         "BundleId"
     ],
-    "readOnlyProperties": [
-        "/properties/InstanceName",
-        "/properties/Arn"
-    ],
     "writeOnlyProperties": [
         "/properties/UserData"
     ],
@@ -55,12 +37,11 @@
         "/properties/InstanceName"
     ],
     "createOnlyProperties": [
-        "/properties/InstanceName",
         "/properties/AvailabilityZone",
         "/properties/BlueprintId",
         "/properties/BundleId",
-        "/properties/UserData"
-
+        "/properties/UserData",
+        "/properties/InstanceName"
     ],
     "handlers": {
         "create": {

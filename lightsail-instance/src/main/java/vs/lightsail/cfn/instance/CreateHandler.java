@@ -3,6 +3,7 @@ package vs.lightsail.cfn.instance;
 import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.AmazonLightsailClientBuilder;
 import com.amazonaws.services.lightsail.model.*;
+import software.amazon.cloudformation.exceptions.CfnAlreadyExistsException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
 import software.amazon.cloudformation.proxy.*;
 import software.amazon.cloudformation.resource.IdentifierUtils;
@@ -23,6 +24,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         final Logger logger) {
 
         logger.log("Invoked CreateHandler.handleRequest");
+        logger.log("callbackContext=" + callbackContext);
+        logger.log("request=" + request);
 
         this.logger = logger;
         final ResourceModel model = request.getDesiredResourceState();
@@ -47,6 +50,11 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             model.setInstanceName(
                     IdentifierUtils.generateResourceIdentifier(
                             "inst", request.getClientRequestToken(), 128));
+        }
+
+        // Check if instance with the same name already exists
+        if(SharedHelper.doesInstanceExist(model, proxy, logger, lightsailClient)) {
+            throw new CfnAlreadyExistsException(ResourceModel.TYPE_NAME, model.getInstanceName());
         }
 
         CreateInstancesResult result = createResource(Translator.translateToCreateRequest(model), proxy);

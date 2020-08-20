@@ -20,7 +20,6 @@ public class Translator {
 
     static ResourceModel createModelFromInstance(Instance instance) {
         ResourceModel model = new ResourceModel();
-        model.setArn(instance.getArn());
         model.setAvailabilityZone(instance.getLocation().getAvailabilityZone());
         model.setBlueprintId(instance.getBlueprintId());
         model.setBundleId(instance.getBundleId());

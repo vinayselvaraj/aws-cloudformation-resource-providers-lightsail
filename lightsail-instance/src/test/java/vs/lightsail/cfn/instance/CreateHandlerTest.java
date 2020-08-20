@@ -1,8 +1,6 @@
 package vs.lightsail.cfn.instance;
 
-import com.amazonaws.services.lightsail.model.CreateInstancesRequest;
-import com.amazonaws.services.lightsail.model.CreateInstancesResult;
-import com.amazonaws.services.lightsail.model.Operation;
+import com.amazonaws.services.lightsail.model.*;
 import org.mockito.Mockito;
 import software.amazon.cloudformation.proxy.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import software.amazon.cloudformation.proxy.OperationStatus;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -42,6 +41,8 @@ public class CreateHandlerTest {
         mockResult.setOperations(new ArrayList<Operation>());
 
         Mockito.doReturn(mockResult).when(proxy).injectCredentialsAndInvoke(Mockito.any(CreateInstancesRequest.class), Mockito.any());
+
+        Mockito.doReturn(new GetInstanceResult()).when(proxy).injectCredentialsAndInvoke(Mockito.any(GetInstanceRequest.class), Mockito.any());
 
         final ResourceModel model = ResourceModel.builder().build();
         model.setBundleId("nano_2_0");

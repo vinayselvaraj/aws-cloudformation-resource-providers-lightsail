@@ -1,5 +1,7 @@
 package vs.lightsail.cfn.instance;
 
+import com.amazonaws.services.lightsail.model.*;
+import org.mockito.Mockito;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
 import software.amazon.cloudformation.proxy.OperationStatus;
@@ -34,6 +36,11 @@ public class DeleteHandlerTest {
         final DeleteHandler handler = new DeleteHandler();
 
         final ResourceModel model = ResourceModel.builder().build();
+        model.setInstanceName("TEST");
+
+        SharedTestHelper.mockGetInstance(model, proxy);
+
+        Mockito.doReturn(new DeleteInstanceResult()).when(proxy).injectCredentialsAndInvoke(Mockito.any(DeleteInstanceRequest.class), Mockito.any());
 
         final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
             .desiredResourceState(model)

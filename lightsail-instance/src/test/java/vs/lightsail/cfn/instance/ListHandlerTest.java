@@ -41,7 +41,6 @@ public class ListHandlerTest {
 
         GetInstancesResult mockResult = new GetInstancesResult();
         Instance mockInstance = new Instance();
-        mockInstance.setArn(model.getArn());
         mockInstance.setBlueprintId(model.getBlueprintId());
         mockInstance.setBundleId(model.getBundleId());
         mockInstance.setLocation(new ResourceLocation().withAvailabilityZone(model.getAvailabilityZone()));
