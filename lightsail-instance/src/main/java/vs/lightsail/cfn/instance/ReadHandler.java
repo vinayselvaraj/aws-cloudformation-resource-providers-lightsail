@@ -20,10 +20,6 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final Logger logger) {
 
-        logger.log("Invoked ReadHandler.handleRequest");
-        logger.log("callbackContext=" + callbackContext);
-        logger.log("request=" + request);
-
         final ResourceModel model = request.getDesiredResourceState();
         GetInstanceRequest getInstanceRequest = new GetInstanceRequest();
         getInstanceRequest.setInstanceName(model.getInstanceName());
@@ -32,9 +28,7 @@ public class ReadHandler extends BaseHandler<CallbackContext> {
             GetInstanceResult getInstanceResult =
                     proxy.injectCredentialsAndInvoke(getInstanceRequest, lightsailClient::getInstance);
 
-            ResourceModel fetchedModel = Translator.createModelFromInstance(getInstanceResult.getInstance());
-            logger.log(("Read instance: " + fetchedModel));
-
+            ResourceModel fetchedModel = SharedHelper.createModelFromInstance(getInstanceResult.getInstance());
 
             return ProgressEvent.<ResourceModel, CallbackContext>builder()
                     .resourceModel(fetchedModel)

@@ -28,9 +28,6 @@ public class ListHandler extends BaseHandler<CallbackContext> {
                 new GetInstancesRequest().withPageToken(request.getNextToken()),
                 lightsailClient::getInstances);
 
-        // TODO : Remove DEBUG
-        logger.log(createListResourceModels(getInstancesResult).toString());
-
         return ProgressEvent.<ResourceModel, CallbackContext>builder()
                 .status(OperationStatus.SUCCESS)
                 .resourceModels(createListResourceModels(getInstancesResult))
@@ -41,7 +38,7 @@ public class ListHandler extends BaseHandler<CallbackContext> {
     private List<ResourceModel> createListResourceModels(final GetInstancesResult response) {
         return response.getInstances()
                 .stream()
-                .map(instance -> Translator.createModelFromInstance(instance))
+                .map(instance -> SharedHelper.createModelFromInstance(instance))
                 .collect(Collectors.toList());
     }
 }

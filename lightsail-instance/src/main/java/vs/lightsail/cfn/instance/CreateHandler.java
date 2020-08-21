@@ -9,9 +9,6 @@ import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorExceptio
 import software.amazon.cloudformation.proxy.*;
 import software.amazon.cloudformation.resource.IdentifierUtils;
 
-import java.time.Duration;
-
-
 public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private Logger logger;
@@ -41,12 +38,14 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             throw new RuntimeException(Constants.CREATE_TIMED_OUT_MESSAGE);
         }
 
+        // If status is set and set to pending
         if(currentContext.getStatus() != null
                 && currentContext.getStatus().equals(Constants.STATUS_CREATION_PENDING)) {
             // Check the status of the instance creation
-            return checkStatus(proxy, request, currentContext, logger);
+            return checkStatus(proxy, request, currentContext);
         }
 
+        // Generate instance name if it is not set
         if (StringUtils.isNullOrEmpty(model.getInstanceName())) {
             model.setInstanceName(
                     IdentifierUtils.generateResourceIdentifier(
@@ -54,14 +53,16 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         }
 
         // Check if instance with the same name already exists
-        if(SharedHelper.doesInstanceExist(model, proxy, logger, lightsailClient)) {
+        if(SharedHelper.doesInstanceExist(model, proxy, lightsailClient)) {
             throw new CfnAlreadyExistsException(ResourceModel.TYPE_NAME, model.getInstanceName());
         }
 
+        // Create instance and get result
         CreateInstancesResult result = proxy.injectCredentialsAndInvoke(
-                Translator.translateToCreateRequest(model),
+                SharedHelper.translateToCreateRequest(model),
                 lightsailClient::createInstances);
 
+        // Check if create operation exists in result
         for(Operation op : result.getOperations()) {
             if(op != null && op.getOperationType().equals(Constants.CREATE_OPERATION)) {
                 if(op.getErrorCode() != null) {
@@ -98,8 +99,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
     private ProgressEvent<ResourceModel, CallbackContext> checkStatus(
             final AmazonWebServicesClientProxy proxy,
             final ResourceHandlerRequest<ResourceModel> request,
-            final CallbackContext callbackContext,
-            final Logger logger) {
+            final CallbackContext callbackContext) {
 
         ResourceModel model = request.getDesiredResourceState();
 
@@ -111,7 +111,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         Instance instance = getInstanceResult.getInstance();
         if(instance != null || instance.getState().getName().equals(Constants.INSTANCE_STATE_RUNNING)) {
             logger.log(String.format("Instance %s is running", model.getInstanceName()));
-            ResourceModel fetchedModel = Translator.createModelFromInstance(instance);
+            ResourceModel fetchedModel = SharedHelper.createModelFromInstance(instance);
             logger.log("Returning model after instance creation: " + fetchedModel);
             return ProgressEvent.defaultSuccessHandler(fetchedModel);
         }
