@@ -53,7 +53,13 @@ _Required_: No
 
 _Type_: String
 
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+_Minimum_: <code>2</code>
+
+_Maximum_: <code>255</code>
+
+_Pattern_: <code>^[a-zA-Z0-9][a-zA-Z0-9\\-_.]{2,254}</code>
+
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
 #### BlueprintId
 

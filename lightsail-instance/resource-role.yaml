@@ -26,6 +26,7 @@ Resources:
                 - "lightsail:CreateInstances"
                 - "lightsail:DeleteInstance"
                 - "lightsail:GetInstance"
+                - "lightsail:GetInstances"
                 Resource: "*"
 Outputs:
   ExecutionRoleArn:

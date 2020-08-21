@@ -1,0 +1,8 @@
+{
+  "CREATE": {
+    "/InstanceName": "testinst",
+    "/AvailabilityZone": "us-east-1a",
+    "/BlueprintId": "amazon_linux",
+    "/BundleId": "nano_2_0"
+  }
+}

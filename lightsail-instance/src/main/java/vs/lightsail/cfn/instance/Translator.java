@@ -24,6 +24,7 @@ public class Translator {
         model.setBlueprintId(instance.getBlueprintId());
         model.setBundleId(instance.getBundleId());
         model.setInstanceName(instance.getName());
+        model.setUserData(null);
         return model;
     }
 }

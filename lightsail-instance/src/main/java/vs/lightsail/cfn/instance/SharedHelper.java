@@ -27,10 +27,6 @@ public class SharedHelper {
 
         } catch(NotFoundException e) {
             return false;
-        } catch(Exception ex) {
-            logger.log("Caught Exceptionn: " + ex);
-            return false;
-
         }
 
         return true;

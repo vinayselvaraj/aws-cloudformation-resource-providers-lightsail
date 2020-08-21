@@ -6,7 +6,6 @@ import com.amazonaws.services.lightsail.model.GetInstancesRequest;
 import com.amazonaws.services.lightsail.model.GetInstancesResult;
 import software.amazon.cloudformation.proxy.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,21 +24,18 @@ public class ListHandler extends BaseHandler<CallbackContext> {
         logger.log("callbackContext=" + callbackContext);
         logger.log("request=" + request);
 
-        final List<ResourceModel> models = new ArrayList<>();
+        GetInstancesResult getInstancesResult = proxy.injectCredentialsAndInvoke(
+                new GetInstancesRequest().withPageToken(request.getNextToken()),
+                lightsailClient::getInstances);
 
-        try {
-            GetInstancesResult getInstancesResult = proxy.injectCredentialsAndInvoke(
-                    new GetInstancesRequest().withPageToken(request.getNextToken()),
-                    lightsailClient::getInstances);
-            return ProgressEvent.<ResourceModel, CallbackContext>builder()
-                    .status(OperationStatus.SUCCESS)
-                    .resourceModels(createListResourceModels(getInstancesResult))
-                    .nextToken(getInstancesResult.getNextPageToken())
-                    .build();
-        } catch(Exception e) {
-            return ProgressEvent.defaultFailureHandler(e, HandlerErrorCode.InternalFailure);
-        }
+        // TODO : Remove DEBUG
+        logger.log(createListResourceModels(getInstancesResult).toString());
 
+        return ProgressEvent.<ResourceModel, CallbackContext>builder()
+                .status(OperationStatus.SUCCESS)
+                .resourceModels(createListResourceModels(getInstancesResult))
+                .nextToken(getInstancesResult.getNextPageToken())
+                .build();
     }
 
     private List<ResourceModel> createListResourceModels(final GetInstancesResult response) {

@@ -9,5 +9,5 @@ public class Constants {
     public static final String INSTANCE_STATE_RUNNING = "running";
     public static final String CREATE_TIMED_OUT_MESSAGE = "Timed out waiting for Lightsail instance to create.";
     public static final String DELETE_TIMED_OUT_MESSAGE = "Timed out waiting for Lightsail instance to delete.";
-    public static final int CALLBACK_DELAY_SECONDS = 5;
+    public static final int CALLBACK_DELAY_SECONDS = 1;
 }

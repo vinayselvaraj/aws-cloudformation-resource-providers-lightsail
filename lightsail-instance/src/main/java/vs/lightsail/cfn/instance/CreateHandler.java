@@ -3,6 +3,7 @@ package vs.lightsail.cfn.instance;
 import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.AmazonLightsailClientBuilder;
 import com.amazonaws.services.lightsail.model.*;
+import com.amazonaws.util.StringUtils;
 import software.amazon.cloudformation.exceptions.CfnAlreadyExistsException;
 import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorException;
 import software.amazon.cloudformation.proxy.*;
@@ -28,7 +29,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         logger.log("request=" + request);
 
         this.logger = logger;
-        final ResourceModel model = request.getDesiredResourceState();
+        ResourceModel model = request.getDesiredResourceState();
 
         final CallbackContext currentContext = callbackContext == null
                 ? CallbackContext.builder()
@@ -46,7 +47,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             return checkStatus(proxy, request, currentContext, logger);
         }
 
-        if (model.getInstanceName() == null || model.getInstanceName().isEmpty()) {
+        if (StringUtils.isNullOrEmpty(model.getInstanceName())) {
             model.setInstanceName(
                     IdentifierUtils.generateResourceIdentifier(
                             "inst", request.getClientRequestToken(), 128));
@@ -57,7 +58,10 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             throw new CfnAlreadyExistsException(ResourceModel.TYPE_NAME, model.getInstanceName());
         }
 
-        CreateInstancesResult result = createResource(Translator.translateToCreateRequest(model), proxy);
+        CreateInstancesResult result = proxy.injectCredentialsAndInvoke(
+                Translator.translateToCreateRequest(model),
+                lightsailClient::createInstances);
+
         for(Operation op : result.getOperations()) {
             if(op != null && op.getOperationType().equals(Constants.CREATE_OPERATION)) {
                 if(op.getErrorCode() != null) {
@@ -68,6 +72,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             }
         }
 
+        logger.log("Returning model: " + model);
 
         CallbackContext newCallbackContext = CallbackContext.builder()
                 .stabilizationRetriesRemaining(currentContext.getStabilizationRetriesRemaining() - 1)
@@ -76,7 +81,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
         return ProgressEvent.defaultInProgressHandler(
                 newCallbackContext,
-                (int) Duration.ofSeconds(Constants.CALLBACK_DELAY_SECONDS).getSeconds(),
+                Constants.CALLBACK_DELAY_SECONDS,
                 model
         );
     }
@@ -96,7 +101,7 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
             final CallbackContext callbackContext,
             final Logger logger) {
 
-        final ResourceModel model = request.getDesiredResourceState();
+        ResourceModel model = request.getDesiredResourceState();
 
         GetInstanceRequest getInstanceRequest = new GetInstanceRequest();
         getInstanceRequest.setInstanceName(model.getInstanceName());
@@ -106,7 +111,9 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         Instance instance = getInstanceResult.getInstance();
         if(instance != null || instance.getState().getName().equals(Constants.INSTANCE_STATE_RUNNING)) {
             logger.log(String.format("Instance %s is running", model.getInstanceName()));
-            return ProgressEvent.defaultSuccessHandler(model);
+            ResourceModel fetchedModel = Translator.createModelFromInstance(instance);
+            logger.log("Returning model after instance creation: " + fetchedModel);
+            return ProgressEvent.defaultSuccessHandler(fetchedModel);
         }
 
         logger.log(String.format("Instance %s has not started running", model.getInstanceName()));
@@ -116,9 +123,8 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
                 .build();
         return ProgressEvent.defaultInProgressHandler(
                 newCallbackContext,
-                (int) Duration.ofSeconds(Constants.CALLBACK_DELAY_SECONDS).getSeconds(),
-                model);
+                Constants.CALLBACK_DELAY_SECONDS,
+                request.getDesiredResourceState());
     }
-
 
 }

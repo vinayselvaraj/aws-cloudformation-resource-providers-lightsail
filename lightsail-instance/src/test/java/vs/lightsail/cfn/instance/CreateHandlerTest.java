@@ -45,6 +45,7 @@ public class CreateHandlerTest {
         Mockito.doReturn(new GetInstanceResult()).when(proxy).injectCredentialsAndInvoke(Mockito.any(GetInstanceRequest.class), Mockito.any());
 
         final ResourceModel model = ResourceModel.builder().build();
+        model.setInstanceName("testinst");
         model.setBundleId("nano_2_0");
         model.setBlueprintId("amazon_linux");
         model.setAvailabilityZone("us-east-1a");

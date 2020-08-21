@@ -83,6 +83,6 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
                     model);
         }
 
-        return ProgressEvent.defaultSuccessHandler(model);
+        return ProgressEvent.defaultSuccessHandler(null);
     }
 }

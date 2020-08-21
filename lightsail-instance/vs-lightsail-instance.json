@@ -9,7 +9,10 @@
         },
         "InstanceName": {
             "description": "The names to use for your new Lightsail instances.",
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\\\-_.]{2,254}",
+            "minLength": 2,
+            "maxLength": 255
         },
         "BlueprintId": {
             "description": "The ID for a virtual private server image (e.g., app_wordpress_4_4 or app_lamp_7_0). Use the get blueprints operation to return a list of available images (or blueprints).",
@@ -40,13 +43,14 @@
         "/properties/AvailabilityZone",
         "/properties/BlueprintId",
         "/properties/BundleId",
-        "/properties/UserData",
-        "/properties/InstanceName"
+        "/properties/InstanceName",
+        "/properties/UserData"
     ],
     "handlers": {
         "create": {
             "permissions": [
-                "lightsail:CreateInstances"
+                "lightsail:CreateInstances",
+                "lightsail:GetInstance"
             ]
         },
         "read": {
@@ -56,11 +60,14 @@
         },
         "delete": {
             "permissions": [
-                "lightsail:DeleteInstance"
+                "lightsail:DeleteInstance",
+                "lightsail:GetInstance"
             ]
         },
         "list": {
-          "permissions": []
+          "permissions": [
+              "lightsail:GetInstances"
+          ]
         }
     }
 }
