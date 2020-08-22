@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Sample template showing the usage of VS::LightSail::Instance
+Description: Sample template showing the usage of VS::Lightsail::Instance
 
 Resources:
-  LightSailInstance:
-    Type: VS::LightSail::Instance
+  LightsailInstance:
+    Type: VS::Lightsail::Instance
     Properties:
-        AvailabilityZone: us-east-1b
+        AvailabilityZone: us-east-1a
         BundleId: nano_2_0
         BlueprintId: amazon_linux

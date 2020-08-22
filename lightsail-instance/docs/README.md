@@ -1,6 +1,6 @@
-# VS::LightSail::Instance
+# VS::Lightsail::Instance
 
-LightSail Instance Resource Provider
+Lightsail Instance Resource Provider
 
 ## Syntax
 
@@ -10,7 +10,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "Type" : "VS::LightSail::Instance",
+    "Type" : "VS::Lightsail::Instance",
     "Properties" : {
         "<a href="#availabilityzone" title="AvailabilityZone">AvailabilityZone</a>" : <i>String</i>,
         "<a href="#instancename" title="InstanceName">InstanceName</a>" : <i>String</i>,
@@ -24,7 +24,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 ### YAML
 
 <pre>
-Type: VS::LightSail::Instance
+Type: VS::Lightsail::Instance
 Properties:
     <a href="#availabilityzone" title="AvailabilityZone">AvailabilityZone</a>: <i>String</i>
     <a href="#instancename" title="InstanceName">InstanceName</a>: <i>String</i>

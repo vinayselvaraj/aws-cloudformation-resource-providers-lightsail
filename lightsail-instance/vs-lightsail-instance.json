@@ -1,6 +1,6 @@
 {
-    "typeName": "VS::LightSail::Instance",
-    "description": "LightSail Instance Resource Provider",
+    "typeName": "VS::Lightsail::Instance",
+    "description": "Lightsail Instance Resource Provider",
     "sourceUrl": "https://github.com/vinayselvaraj/aws-cloudformation-resource-providers-lightsail.git",
     "properties": {
         "AvailabilityZone": {

@@ -1,4 +1,4 @@
-# VS::LightSail::Instance
+# VS::Lightsail::Instance
 
 Congratulations on starting development! Next steps:
 
