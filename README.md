@@ -3,6 +3,7 @@
 This repository contains a CloudFormation Resource Provider to create LightSail instances.
 
 ## Requirements
+The following are needed each time the AWS LightSail CloudFormation Resource Provider is installed in an AWS account for a given region:
 - Java 8
 - Apache Maven
 - CloudFormation CLI
