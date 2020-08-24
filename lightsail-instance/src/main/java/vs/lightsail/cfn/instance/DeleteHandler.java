@@ -11,6 +11,7 @@ import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.time.Duration;
+import java.util.List;
 
 public class DeleteHandler extends BaseHandler<CallbackContext> {
 
@@ -80,7 +81,9 @@ public class DeleteHandler extends BaseHandler<CallbackContext> {
 
         final ResourceModel model = request.getDesiredResourceState();
 
-        if(SharedHelper.doesInstanceExist(model, proxy, lightsailClient)) {
+        boolean foundInList = SharedHelper.findInList(proxy, request, callbackContext, logger);
+
+        if(!foundInList && SharedHelper.doesInstanceExist(model, proxy, lightsailClient)) {
             CallbackContext newCallbackContext = CallbackContext.builder()
                     .stabilizationRetriesRemaining(callbackContext.getStabilizationRetriesRemaining() - 1)
                     .status(Constants.STATUS_DELETE_PENDING)

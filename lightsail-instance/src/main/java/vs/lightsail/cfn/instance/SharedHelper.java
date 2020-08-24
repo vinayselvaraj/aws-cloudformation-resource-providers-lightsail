@@ -3,8 +3,12 @@ package vs.lightsail.cfn.instance;
 import com.amazonaws.services.lightsail.AmazonLightsail;
 import com.amazonaws.services.lightsail.model.*;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
+import software.amazon.cloudformation.proxy.ProgressEvent;
+import software.amazon.cloudformation.proxy.Logger;
+import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 
 import java.util.Collections;
+import java.util.List;
 
 public class SharedHelper {
 
@@ -50,5 +54,22 @@ public class SharedHelper {
         model.setInstanceName(instance.getName());
         model.setUserData(null);
         return model;
+    }
+
+    static boolean findInList(final AmazonWebServicesClientProxy proxy,
+                              final ResourceHandlerRequest<ResourceModel> request,
+                              final CallbackContext callbackContext,
+                              final Logger logger) {
+        boolean result = false;
+        ProgressEvent<ResourceModel, CallbackContext> listResponse =
+                new ListHandler().handleRequest(proxy, request, callbackContext, logger);
+        List<ResourceModel> resourceModels = listResponse.getResourceModels();
+        for(ResourceModel m : resourceModels) {
+            if(m.getInstanceName().equals(request.getDesiredResourceState().getInstanceName())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }

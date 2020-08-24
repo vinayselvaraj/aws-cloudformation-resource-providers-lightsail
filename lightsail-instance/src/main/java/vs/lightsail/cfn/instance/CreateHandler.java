@@ -9,6 +9,8 @@ import software.amazon.cloudformation.exceptions.CfnServiceInternalErrorExceptio
 import software.amazon.cloudformation.proxy.*;
 import software.amazon.cloudformation.resource.IdentifierUtils;
 
+import java.util.List;
+
 public class CreateHandler extends BaseHandler<CallbackContext> {
 
     private Logger logger;
@@ -87,15 +89,6 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
         );
     }
 
-    private CreateInstancesResult createResource(final CreateInstancesRequest createInstancesRequest,
-                                                final AmazonWebServicesClientProxy proxy) {
-        try {
-            return proxy.injectCredentialsAndInvoke(createInstancesRequest, lightsailClient::createInstances);
-        } catch (final Exception e) {
-            throw new CfnServiceInternalErrorException("CreateInstance", e);
-        }
-    }
-
     private ProgressEvent<ResourceModel, CallbackContext> checkStatus(
             final AmazonWebServicesClientProxy proxy,
             final ResourceHandlerRequest<ResourceModel> request,
@@ -103,13 +96,15 @@ public class CreateHandler extends BaseHandler<CallbackContext> {
 
         ResourceModel model = request.getDesiredResourceState();
 
+        boolean foundInList = SharedHelper.findInList(proxy, request, callbackContext, logger);
+
         GetInstanceRequest getInstanceRequest = new GetInstanceRequest();
         getInstanceRequest.setInstanceName(model.getInstanceName());
 
         GetInstanceResult getInstanceResult =
                 proxy.injectCredentialsAndInvoke(getInstanceRequest, lightsailClient::getInstance);
         Instance instance = getInstanceResult.getInstance();
-        if(instance != null || instance.getState().getName().equals(Constants.INSTANCE_STATE_RUNNING)) {
+        if(foundInList && instance != null || instance.getState().getName().equals(Constants.INSTANCE_STATE_RUNNING)) {
             logger.log(String.format("Instance %s is running", model.getInstanceName()));
             ResourceModel fetchedModel = SharedHelper.createModelFromInstance(instance);
             logger.log("Returning model after instance creation: " + fetchedModel);
