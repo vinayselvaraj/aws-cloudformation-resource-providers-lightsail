@@ -34,4 +34,4 @@ Resources:
 
 3. Create the CloudFormation stack then check to see that the Lightsail instance was created.
 
-More details can be found in the [usage document](https://github.com/vinayselvaraj/aws-cloudformation-resource-providers-lightsail/blob/master/lightsail-instance/docs/README.md).
+More details can be found in the [usage document](lightsail-instance/docs/README.md).
