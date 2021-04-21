@@ -17,7 +17,7 @@ mvn package
 cfn submit --set-default
 ```
 
-2. Create new CloudFormation template using the VS::Lightsail::Instance resource or use an existing one.  Use the [sample template](https://github.com/vinayselvaraj/aws-cloudformation-resource-providers-lightsail/blob/master/lightsail-instance/sample.yaml) as a reference.
+2. Create new CloudFormation template using the VS::Lightsail::Instance resource or use an existing one.  Use the [sample template](lightsail-instance/sample.yaml) as a reference.
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
